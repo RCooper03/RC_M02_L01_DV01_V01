@@ -26,6 +26,8 @@ public class PlayerBehaviour : MonoBehaviour
 
     private CapsuleCollider _col;
 
+    private gameBehaviour gameManager;
+
     public bool invertCamera = false;
     public bool cameraCanMove = true;
     public float mouseSensitivity = 2f;
@@ -46,6 +48,8 @@ public class PlayerBehaviour : MonoBehaviour
 
         _rb = GetComponent<Rigidbody>();
 
+        gameManager = GameObject.Find("Game Manager").GetComponent<gameBehaviour>();
+
     }
 
     
@@ -65,10 +69,7 @@ public class PlayerBehaviour : MonoBehaviour
         {
             canShoot = true;
         }
-        /*4
-        this.transform.Translate(Vector3.forward * vInput *Time.deltaTime);
-        this.transform.Rotate(Vector3.up * hInput * Time.deltaTime);   
-        */
+        
 
         if (cameraCanMove)
         {
@@ -124,5 +125,13 @@ public class PlayerBehaviour : MonoBehaviour
         bool grounded = Physics.CheckCapsule(_col.bounds.center, capsuleBottom, distanceToGround, groundLayer, QueryTriggerInteraction.Ignore);
 
         return grounded;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.name == "Enemy")
+        {
+            gameManager.HP -= 1;
+        }
     }
 }
